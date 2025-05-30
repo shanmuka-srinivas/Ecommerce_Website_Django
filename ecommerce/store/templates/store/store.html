@@ -1,0 +1,78 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+    {% for product in products %}
+    <div class="col-lg-4">
+        <img src="{{product.imageURL}}" class="thumbnail">
+        <div class="box-element product">
+            <h6><strong>{{ product.name }}</strong></h6>
+            <hr>
+            <form method="POST" action="{% url 'update_item' %}">
+                {% csrf_token %}
+                <input type="hidden" name="productId" value="{{ product.id }}">
+                <input type="hidden" name="action" value="add">
+                <button type="submit" class="btn btn-outline-secondary">Add to Cart</button> <a
+                    href="javascript:void(0);" class="btn btn-outline-success"
+                    onclick="openModal('{{ product.imageURL }}')">View</a>
+                <h4 style="float: right;">${{ product.price|floatformat:2 }}</h4>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <img id="modal-image" src="" alt="Product Image">
+        </div>
+    </div>
+</div>
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        backdrop-filter: blur(6px);
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        overflow: auto;
+    }
+    .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        position: relative;
+        width: 90%;
+        max-width: 560px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        box-sizing: border-box;
+    }
+    .modal-content img {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
+    .close-btn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 28px;
+        color: #333;
+        cursor: pointer;
+    }
+</style>
+<script>
+    function openModal(imageURL) {
+        document.getElementById("modal-image").src = imageURL;
+        document.getElementById("modal").style.display = "flex";
+    }
+    function closeModal() {
+        document.getElementById("modal").style.display = "none";
+    }
+</script>
+{% endblock content %}

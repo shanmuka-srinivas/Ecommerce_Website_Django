@@ -1,0 +1,55 @@
+{% extends 'store/main.html' %}
+{% load static %}
+{% block content %}
+<br>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+    <h1>{{ request.user.username }}'s order details</h1>
+    <a class="btn btn-outline-dark" href="{% url 'store' %}">&#x2190; Continue Shopping</a>
+</div>
+{% if order_items %}
+<div style="display: flex; font-weight: bold; margin-top: 20px; border-bottom: 2px solid #ccc; padding-bottom: 10px;">
+    <div style="flex: 2;">Product Image</div>
+    <div style="flex: 2; padding-left: 15px;">Product Name</div>
+    <div style="flex: 2; padding-left: 25px;">Ordered Date</div>
+    <div style="flex: 1;">Quantity</div>
+    <div style="flex: 2; padding-left: 45px;">Transaction ID</div>
+    <div style="flex: 1; padding-right: 15px;">Amount Paid</div>
+</div>
+{% for item in order_items %}
+<div style="display: flex; align-items: center; gap: 20px; margin: 10px 0;">
+    <div style="flex: 2;">
+        <img class="row-image" src="{{ item.product.imageURL }}" alt="{{ item.product.name }}"
+            style="width: 100px; height: auto;">
+    </div>
+    <div id="dd1" style="flex: 2;">
+        {{ item.product.name }}
+    </div>
+    <div style="flex: 2;">
+        {{ item.order.date_ordered|date:"Y-m-d H:i" }}
+    </div>
+    <div style="flex: 1;">
+        {{ item.quantity }}
+    </div>
+    <div style="flex: 2;">
+        {{ item.order.transaction_id }}
+    </div>
+    <div style="flex: 1;">
+        <img class="chg-quantity1" src="{% static 'images/correct.png' %}" alt=""> $ {{ item.get_total|floatformat:2 }}
+    </div>
+</div>
+<hr>
+{% endfor %}
+{% else %}
+<p style="margin-left: 5px;">No Orders Found Yet</p>
+{% endif %}
+<style>
+    .chg-quantity1 {
+        width: 17px;
+        height: 17px;
+        margin-left: -7px;
+    }
+    #dd1 {
+        margin-left: -7px;
+    }
+</style>
+{% endblock %}
